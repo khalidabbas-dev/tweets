@@ -20,6 +20,15 @@ import databaseOptions from './config/db.config';
       envFilePath: [`${process.env.NODE_ENV}.env`],
     }),
     DatabaseModule,
+    UsersModule,
+    AuthModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '60s' },
+    }),
   ],
+  controllers: [AppController],
+  providers: [AppService, AuthService, UsersService],
+  exports: [AuthService],
 })
 export class AppModule {}
