@@ -1,0 +1,16 @@
+version: '3.8' #docker-compose version
+services: # services tht we need to up like postgress or any other custom image
+  podopolo-postgres: # container name
+    image: postgres:14 # By default it will look into the docker hub
+    ports: # local host port  - container port
+      - 5432:5432
+    restart: always
+    environment: # env variables for that specific container
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRESS_DB: podopolo
+    volumes:
+      - docker-podopolo-postgres:/var/lib/postgresql/data
+
+volumes:
+  docker-podopolo-postgres:
