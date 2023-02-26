@@ -30,6 +30,7 @@ export class AuthService {
     try {
       const { username, password } = user;
       const payload = await this.validateUser(username, password);
+
       if (!payload) {
         throw new HttpException(
           'Invalid username or password',
