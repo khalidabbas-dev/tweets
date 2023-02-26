@@ -5,6 +5,7 @@ import LoginInput from './dto/login-input.dto';
 import LoginResponse from './dto/login-response.dto';
 import RegisterInput from './dto/register-input.dto';
 import { compareSync } from 'bcryptjs';
+import IJwtPayload from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -26,20 +27,21 @@ export class AuthService {
     return null;
   }
 
-  async login(user: LoginInput): Promise<LoginResponse> {
+  async login(dto: LoginInput): Promise<LoginResponse> {
     try {
-      const { username, password } = user;
-      const payload = await this.validateUser(username, password);
+      const { username, password } = dto;
+      const user = await this.validateUser(username, password);
 
-      if (!payload) {
+      if (!user) {
         throw new HttpException(
           'Invalid username or password',
           HttpStatus.NOT_FOUND,
         );
       }
+      const jwtPayload: IJwtPayload = { username, id: user.id };
 
       return {
-        accessToken: this.jwtService.sign({ username, password }),
+        accessToken: this.jwtService.sign(jwtPayload),
       };
     } catch (error) {
       return error;
