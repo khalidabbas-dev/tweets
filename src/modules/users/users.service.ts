@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { hashSync } from 'bcryptjs';
+import { Wallet } from '../wallets/entities/wallet.entity';
+import { WalletsService } from '../wallets/wallets.service';
 
 @Injectable()
 export class UsersService {
@@ -35,6 +37,15 @@ export class UsersService {
   async findOne(username: string) {
     try {
       return await this.userRepository.findOne({ where: { username } });
+    } catch (error) {
+      console.log('ee', error);
+      return error;
+    }
+  }
+
+  async findById(id: number): Promise<User> {
+    try {
+      return await this.userRepository.findOne({ where: { id } });
     } catch (error) {
       return error;
     }
