@@ -33,7 +33,6 @@ export class WalletsService {
 
       return res;
     } catch (error) {
-      console.log(error);
       return error;
     }
   }
@@ -67,7 +66,6 @@ export class WalletsService {
       // TODO: perform actual transaction
       return await this.walletRepository.save(wallet);
     } catch (error) {
-      console.log(error);
       return error;
     }
   }

@@ -38,7 +38,6 @@ export class UsersService {
     try {
       return await this.userRepository.findOne({ where: { username } });
     } catch (error) {
-      console.log('ee', error);
       return error;
     }
   }

@@ -14,7 +14,6 @@ export class UsersController {
     try {
       return await this.usersService.findOne(user.username);
     } catch (error) {
-      console.log(error);
       return error;
     }
   }
