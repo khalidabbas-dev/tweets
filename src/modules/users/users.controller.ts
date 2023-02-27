@@ -8,20 +8,22 @@ import IUserContext from '../auth/interfaces/user-context.interface';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    try {
-      return await this.usersService.findOne(id);
-    } catch (error) {
-      return error;
-    }
-  }
-
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@CurrentUser() user: IUserContext) {
     try {
       return await this.usersService.findOne(user.username);
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.usersService.findOne(id);
     } catch (error) {
       return error;
     }
