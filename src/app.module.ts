@@ -6,6 +6,7 @@ import { TweetsModule } from './modules/tweets/tweets.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './modules/database/database.module';
+import { WalletsModule } from './modules/wallets/wallets.module';
 import databaseOptions from './config/db.config';
 
 @Module({
@@ -13,12 +14,13 @@ import databaseOptions from './config/db.config';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseOptions],
-      envFilePath: [`${process.env.NODE_ENV}.env`],
+      envFilePath: [`.env`],
     }),
     DatabaseModule,
     UsersModule,
     TweetsModule,
     AuthModule,
+    WalletsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
