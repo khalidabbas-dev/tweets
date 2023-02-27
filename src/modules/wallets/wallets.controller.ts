@@ -12,7 +12,7 @@ import { WalletsService } from './wallets.service';
 export class WalletsController {
   constructor(private readonly walletService: WalletsService) {}
 
-  @Post('add-balance')
+  @Post('balance/add')
   async addBalance(
     @CurrentUser() user: IUserContext,
     @Body() dto: AddBalanceDto,
@@ -24,7 +24,7 @@ export class WalletsController {
     }
   }
 
-  @Post('buy-shares')
+  @Post('shares/buy')
   async buyShares(
     @CurrentUser() user: IUserContext,
     @Body() dto: BuySharesDto,
@@ -32,7 +32,7 @@ export class WalletsController {
     return this.walletService.buyShares(user.id, dto.quantity, dto.price);
   }
 
-  @Post('sell-shares')
+  @Post('shares/sell')
   async sellShares(
     @CurrentUser() user: IUserContext,
     @Body() dto: SellSharesDto,
@@ -40,8 +40,12 @@ export class WalletsController {
     return this.walletService.sellShares(user.id, dto.quantity, dto.price);
   }
 
-  @Get('rates')
-  async getRates(@Param('userId') userId: number) {
-    return { message: 'Live rates subscription initialized' };
+  @Get()
+  async getWallet(@CurrentUser() user: IUserContext) {
+    try {
+      return await this.walletService.getUserWallet(user.id);
+    } catch (error) {
+      return error;
+    }
   }
 }

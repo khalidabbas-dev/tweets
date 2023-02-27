@@ -112,4 +112,14 @@ export class WalletsService {
       return error;
     }
   }
+
+  async getUserWallet(userId: number) {
+    try {
+      return await this.walletRepository.findOne({
+        where: { user: { id: userId } },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
 }
