@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { hashSync } from 'bcryptjs';
 
@@ -15,7 +14,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const isExist = this.userRepository.findOne({
+      const isExist = await this.userRepository.findOne({
         where: { username: createUserDto.username },
       });
 
@@ -27,25 +26,17 @@ export class UsersService {
       user.username = createUserDto.username;
       user.password = hashSync(createUserDto.password, 10);
 
-      return this.userRepository.save(user);
+      return await this.userRepository.save(user);
     } catch (error) {
       return error;
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(username: string) {
-    return this.userRepository.findOne({ where: { username } });
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findOne(username: string) {
+    try {
+      return await this.userRepository.findOne({ where: { username } });
+    } catch (error) {
+      return error;
+    }
   }
 }

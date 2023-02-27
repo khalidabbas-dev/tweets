@@ -1,34 +1,29 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Request,
-} from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
+import CurrentUser from '../auth/decorators/current-user.decorator';
+import IUserContext from '../auth/interfaces/user-context.interface';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.usersService.findOne(id);
+    } catch (error) {
+      return error;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@CurrentUser() user: IUserContext) {
+    try {
+      return await this.usersService.findOne(user.username);
+    } catch (error) {
+      return error;
+    }
   }
 }
