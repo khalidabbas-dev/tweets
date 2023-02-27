@@ -50,9 +50,9 @@ describe('AuthController', () => {
       const error = new HttpException(errorMessage, HttpStatus.NOT_FOUND);
 
       authService.login.mockRejectedValueOnce(error);
-      const loginRes = authController.login(user);
+      const loginRes = await authController.login(user);
 
-      expect(loginRes).rejects.toThrowError(error);
+      expect(loginRes).toEqual(error);
       expect(authService.login).toBeCalledTimes(1);
     });
   });
@@ -80,7 +80,7 @@ describe('AuthController', () => {
 
       authService.register.mockImplementationOnce(() => Promise.reject(error));
 
-      expect(authController.register(user)).rejects.toBe(error);
+      expect(await authController.register(user)).toEqual(error);
       expect(authService.register).toHaveBeenCalledWith(user);
     });
   });
