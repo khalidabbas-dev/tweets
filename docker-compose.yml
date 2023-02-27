@@ -1,14 +1,34 @@
 version: '3.8' #docker-compose version
 services: # services tht we need to up like postgress or any other custom image
-  podopolo-postgres: # container name
+  api:
+    container_name: podopolo_api
+    depends_on:
+      - postgres
+    build:
+      context: .
+      # Only will build local stage from our dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    # Run a command against the local stage of the image
+    links:
+      - postgres
+    command: npm run start:dev
+    ports:
+      - ${PORT}:${PORT}
+
+  postgres:
+    container_name: podopolo-postgres # container name
     image: postgres:14 # By default it will look into the docker hub
     ports: # local host port  - container port
       - 5432:5432
     restart: always
     environment: # env variables for that specific container
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
-      POSTGRESS_DB: podopolo
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRESS_DB: ${DATABASE_NAME}
     volumes:
       - docker-podopolo-postgres:/var/lib/postgresql/data
 
